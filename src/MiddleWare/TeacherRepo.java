@@ -5,7 +5,6 @@ import Model.CourseModels.CourseModule;
 import Model.UserModels.TeacherModel;
 import Utiliy.DatabaseError;
 
-import java.lang.reflect.Array;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -28,7 +27,7 @@ public class TeacherRepo implements ITeacherInterface{
             Connection con = _conn.getConnection();
             if(con == null){
                 throw new DatabaseError("Connection Failed");
-            };
+            }
 
             LocalDate utilDate = teacher.dateOfBirth;
             java.sql.Date sqlDate = java.sql.Date.valueOf(utilDate);
@@ -136,7 +135,7 @@ public class TeacherRepo implements ITeacherInterface{
                 throw new DatabaseError("Connection to database failed");
             }
 
-            ArrayList<TeacherModel> teachers = new ArrayList<TeacherModel>();
+            ArrayList<TeacherModel> teachers = new ArrayList<>();
 
             CallableStatement stmt = conn.prepareCall("SELECT * FROM Teacher t inner join UserInfo u on t.userId = u.userId");
 
