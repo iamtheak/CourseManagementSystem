@@ -41,7 +41,7 @@ public class SemesterView extends JFrame{
 
         CourseModule courseModule = new CourseModule();
         courseModule.moduleName = module1.getSelectedItem().toString();
-        courseModule.ModuleNumber = 1;
+        courseModule.moduleNumber = 1;
         courseModule.semester = semesterNumber;
         courseModule.isOptional = false;
         return courseModule;
@@ -49,7 +49,7 @@ public class SemesterView extends JFrame{
     public CourseModule getModule2(){
         CourseModule courseModule = new CourseModule();
         courseModule.moduleName = module2.getSelectedItem().toString();
-        courseModule.ModuleNumber = 2;
+        courseModule.moduleNumber = 2;
         courseModule.semester = semesterNumber;
         courseModule.isOptional = false;
         return courseModule;
@@ -57,7 +57,7 @@ public class SemesterView extends JFrame{
     public CourseModule getModule3(){
         CourseModule courseModule = new CourseModule();
         courseModule.moduleName = module3.getSelectedItem().toString();
-        courseModule.ModuleNumber = 3;
+        courseModule.moduleNumber = 3;
         courseModule.semester = semesterNumber;
         courseModule.isOptional = false;
         return courseModule;
@@ -65,7 +65,7 @@ public class SemesterView extends JFrame{
     public CourseModule getModule4(){
         CourseModule courseModule = new CourseModule();
         courseModule.moduleName = module4.getSelectedItem().toString();
-        courseModule.ModuleNumber = 4;
+        courseModule.moduleNumber = 4;
         courseModule.semester = semesterNumber;
         courseModule.isOptional = false;
         return courseModule;

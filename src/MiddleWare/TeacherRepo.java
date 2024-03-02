@@ -2,9 +2,13 @@ package MiddleWare;
 
 import Database.DatabaseConnection;
 import Model.CourseModels.CourseModule;
+import Model.CourseModels.StudentCourseModule;
+import Model.UserModels.StudentModel;
 import Model.UserModels.TeacherModel;
+import Model.UserModels.UserBaseModel;
 import Utiliy.DatabaseError;
 
+import java.security.PublicKey;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -18,6 +22,39 @@ public class TeacherRepo implements ITeacherInterface{
         System.out.println("updateTeacher");
     }
 
+
+    public ArrayList<TeacherModel> getTeacherListByModule(int moduleId) {
+        try {
+            Connection con = _conn.getConnection();
+
+            if(con == null){
+                throw new DatabaseError("Connection Failed");
+            }
+
+            CallableStatement statement = con.prepareCall("{call SelTeacherByModuleId(?)}");
+            statement.setInt(1,moduleId);
+
+            ResultSet rs = statement.executeQuery();
+            ArrayList<TeacherModel> teachers = new ArrayList<>();
+
+            while(rs.next()){
+                TeacherModel teacher = new TeacherModel();
+                teacher.firstName = rs.getString("FirstName");
+                teacher.middleName = rs.getString("MiddleName");
+                teacher.lastName = rs.getString("LastName");
+                teacher.email = rs.getString("Email");
+                teacher.teacherId = rs.getInt("TeacherId");
+                teachers.add(teacher);
+            }
+
+            con.close();
+            return teachers;
+        }
+        catch (Exception ex){
+            System.out.println("Error: "+ex);
+        }
+        return null;
+    }
     public TeacherRepo(DatabaseConnection conn){
         _conn = conn;
     }
@@ -190,6 +227,108 @@ public class TeacherRepo implements ITeacherInterface{
         }
         return null;
     }
+    public ArrayList<StudentCourseModule> getStudentListByModule(int moduleId){
+        try{
+            Connection con = _conn.getConnection();
 
+            if(con == null){
+                throw new DatabaseError("Connection Failed");
+            }
 
+            CallableStatement statement = con.prepareCall("{call SelStudentByModuleId(?)}");
+            statement.setInt(1,moduleId);
+
+            ResultSet rs = statement.executeQuery();
+            ArrayList<StudentCourseModule> students = new ArrayList<>();
+
+            while(rs.next()){
+                StudentCourseModule studentModule = new StudentCourseModule();
+
+                studentModule.student = new StudentModel();
+                studentModule.student.studentId = rs.getInt("StudentId");
+                studentModule.student.firstName = rs.getString("FirstName");
+                studentModule.student.middleName = rs.getString("MiddleName");
+                studentModule.student.lastName = rs.getString("LastName");
+                studentModule.student.level = rs.getInt("Level");
+                studentModule.setGrade(rs.getInt("Grade"));
+                studentModule.moduleId = rs.getInt("ModuleId");
+                studentModule.moduleName = rs.getString("ModuleName");
+                studentModule.moduleCode = rs.getString("ModuleCode");
+                studentModule.passPercent = rs.getInt("PassPercent");
+                students.add(studentModule);
+            }
+
+            con.close();
+            return students;
+        }
+        catch (Exception ex){
+            System.out.println("Error: "+ex);
+        }
+
+        return null;
+    }
+    public  String giveMark(int studentId,int moduleId ,int mark){
+
+        try{
+            Connection con = _conn.getConnection();
+
+            if(con == null){
+                throw new DatabaseError("Connection Failed");
+            }
+
+            CallableStatement statement = con.prepareCall("{call InsStudentModuleGrade(?,?,?)}");
+            statement.setInt(1,studentId);
+            statement.setInt(2,moduleId);
+            statement.setInt(3,mark);
+
+            ResultSet rs = statement.executeQuery();
+
+            String result = "";
+            if(rs.next()){
+                result =  rs.getString("Result");
+            }
+
+            con.close();
+            return result;
+        }
+        catch (Exception ex){
+            System.out.println("Error: "+ex);
+        }
+        return "Failure";
+    }
+
+    public TeacherModel  getTeacherByUserId(int userId){
+        try{
+            Connection con = _conn.getConnection();
+
+            if(con == null){
+                throw new DatabaseError("Connection Failed");
+            }
+
+            CallableStatement statement = con.prepareCall("SELECT * FROM Teacher as t INNER JOIN UserInfo AS ui on ui.UserId = t.UserId WHERE t.userId = ?");
+            statement.setInt(1,userId);
+
+            ResultSet rs = statement.executeQuery();
+
+            TeacherModel teacher = new TeacherModel();
+
+            if(rs.next()){
+                teacher.firstName = rs.getString("FirstName");
+                teacher.middleName = rs.getString("MiddleName");
+                teacher.lastName = rs.getString("LastName");
+                teacher.email = rs.getString("Email");
+                teacher.teacherId = rs.getInt("TeacherId");
+                teacher.phoneNumber = rs.getString("PhoneNumber");
+                teacher.dateOfBirth = rs.getDate("DateOfBirth").toLocalDate();
+                teacher.userId = rs.getInt("UserId");
+            }
+
+            con.close();
+            return teacher;
+        }
+        catch (Exception ex){
+            System.out.println("Error: "+ex);
+        }
+        return null;
+    }
 }

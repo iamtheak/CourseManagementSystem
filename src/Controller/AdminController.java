@@ -29,7 +29,8 @@ public class AdminController {
             moudules[modules.indexOf(module)][4] = String.valueOf(module.passPercent);
         }
         return moudules;
-    }public CMSModule GetModuleById(int id){
+    }
+    public CMSModule GetModuleById(int id){
 
         try{
             return  _course.viewModuleById(id);
@@ -124,7 +125,6 @@ public class AdminController {
    public String DeleteTeacher(int id){
         return _teacher.deleteTeacher(id);
    }
-
    public String[][] GetTeachersForTable(){
         ArrayList<TeacherModel> teachers = _teacher.getTeacherList();
         String teacherList[][] = new String[teachers.size()][7];
@@ -150,10 +150,10 @@ public class AdminController {
        return String.valueOf(teachers.size());
    }
    
-//    public String GetStudentCount(){
-//         ArrayList<StudentModel> students = _student.getStudentList();
-//         return String.valueOf(teachers.size());
-//    }
+    public String GetStudentCount(){
+         ArrayList<StudentModel> students = _student.getStudentList();
+         return String.valueOf(students.size());
+    }
     public String[] GetTeacherNames(){
         try {
             ArrayList<TeacherModel> teachers = _teacher.getTeacherList();
@@ -214,5 +214,28 @@ public class AdminController {
 
     public String UnAssignTeacher(String moduleName,int teacherId){
         return _course.unassignTeacher(moduleName,teacherId);
+    }
+
+    public String PublishResult(int courseId,int year){
+        return _course.publishResult(courseId,year);
+    }
+
+    public String[][] GetStudentsForTable(){
+        ArrayList<StudentModel> students = _student.getStudentList();
+        String studentList[][] = new String[students.size()][10];
+        for(StudentModel student: students){
+            studentList[students.indexOf(student)][0] = String.valueOf(student.studentId);
+            studentList[students.indexOf(student)][1] = student.firstName;
+            studentList[students.indexOf(student)][2] = student.middleName;
+            studentList[students.indexOf(student)][3] = student.lastName;
+            studentList[students.indexOf(student)][4] = student.email;
+            studentList[students.indexOf(student)][5] = student.phoneNumber;
+            studentList[students.indexOf(student)][6] = student.dateOfBirth.toString();
+            studentList[students.indexOf(student)][7] = student.courseName;
+            studentList[students.indexOf(student)][8] = student.level+"";
+            studentList[students.indexOf(student)][9] = student.year+"";
+        }
+
+        return studentList;
     }
 }

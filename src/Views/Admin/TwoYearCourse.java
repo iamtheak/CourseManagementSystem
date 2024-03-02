@@ -8,6 +8,8 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class TwoYearCourse extends JFrame{
     private JPanel mainPanel;
@@ -51,7 +53,7 @@ public class TwoYearCourse extends JFrame{
         courseModules.forEach(courseModule -> {
             if(courseModule.year == 1){
                 if(courseModule.semester == 1){
-                    switch (courseModule.ModuleNumber){
+                    switch (courseModule.moduleNumber){
                         case 1:
                             semesterViews.get(0).setModule1(courseModule.moduleName);
                             break;
@@ -67,7 +69,7 @@ public class TwoYearCourse extends JFrame{
                     }
                 }
                 if(courseModule.semester == 2){
-                    switch (courseModule.ModuleNumber){
+                    switch (courseModule.moduleNumber){
                         case 1:
                             semesterViews.get(1).setModule1(courseModule.moduleName);
                             break;
@@ -86,7 +88,7 @@ public class TwoYearCourse extends JFrame{
 
             if(courseModule.year == 2){
                 if(courseModule.semester == 3){
-                    switch (courseModule.ModuleNumber){
+                    switch (courseModule.moduleNumber){
                         case 1:
                             semesterViews.get(2).setModule1(courseModule.moduleName);
                             break;
@@ -102,7 +104,7 @@ public class TwoYearCourse extends JFrame{
                     }
                 }
                 if(courseModule.semester == 4){
-                    switch (courseModule.ModuleNumber){
+                    switch (courseModule.moduleNumber){
                         case 1:
                             semesterViews.get(3).setModule1(courseModule.moduleName);
                             break;
@@ -140,6 +142,7 @@ public class TwoYearCourse extends JFrame{
                 course.courseName = courseName.getText();
 
                 course.modules = new ArrayList<>();
+                HashSet<String> moduleNames = new HashSet<>();
 
                 if(semesterViews.get(0).isModuleFilled() && semesterViews.get(1).isModuleFilled() && semesterViews.get(2).isModuleFilled() && semesterViews.get(3).isModuleFilled()) {
 
@@ -168,6 +171,17 @@ public class TwoYearCourse extends JFrame{
                         CourseModule courseModule4 = semesterView.getModule4();
                         courseModule4.year = year;
                         course.modules.add(courseModule4);
+
+
+                        moduleNames.add(courseModule1.moduleName);
+                        moduleNames.add(courseModule2.moduleName);
+                        moduleNames.add(courseModule3.moduleName);
+                        moduleNames.add(courseModule4.moduleName);
+                    }
+
+                    if(moduleNames.size() != course.modules.size()){
+                        JOptionPane.showMessageDialog(null, "Please enter unique module names for each semester");
+                        return;
                     }
                     AdminController adminController = new AdminController();
                     String result = adminController.UpdateCourse(course);
@@ -224,6 +238,7 @@ public class TwoYearCourse extends JFrame{
 
                 course.modules = new ArrayList<>();
 
+                HashSet<String> moduleNames = new HashSet<>();
                 if(semesterViews.get(0).isModuleFilled() && semesterViews.get(1).isModuleFilled() && semesterViews.get(2).isModuleFilled() && semesterViews.get(3).isModuleFilled()) {
 
                     for(int i= 0; i < 4; i++){
@@ -240,6 +255,8 @@ public class TwoYearCourse extends JFrame{
                         courseModule1.year = year;
                         course.modules.add(courseModule1);
 
+
+
                         CourseModule courseModule2 = semesterView.getModule2();
                         courseModule2.year = year;
                         course.modules.add(courseModule2);
@@ -251,6 +268,16 @@ public class TwoYearCourse extends JFrame{
                         CourseModule courseModule4 = semesterView.getModule4();
                         courseModule4.year = year;
                         course.modules.add(courseModule4);
+
+                        moduleNames.add(courseModule1.moduleName);
+                        moduleNames.add(courseModule2.moduleName);
+                        moduleNames.add(courseModule3.moduleName);
+                        moduleNames.add(courseModule4.moduleName);
+                    }
+
+                    if(moduleNames.size() != course.modules.size()){
+                        JOptionPane.showMessageDialog(null, "Please enter unique module names for each semester");
+                        return;
                     }
                     AdminController adminController = new AdminController();
                     String result = adminController.AddCourse(course);

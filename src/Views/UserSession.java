@@ -1,17 +1,24 @@
 package Views;
+
+import Model.UserModels.UserBaseModel;
+
 public class UserSession {
     private static UserSession instance;
-    private int userId;
-    private String userName;
-    private String userRole;
-    private UserSession(int userId,String userName,String userRole) {
-        this.userId = userId;
+
+    private UserBaseModel user;
+
+
+    private UserSession(UserBaseModel user) {
+        this.user = user;
     }
 
-    public static void createInstance(int userId,String userName,String userRole) {
+    public static void createInstance(UserBaseModel user) {
         if(instance == null) {
-            instance = new UserSession(userId,userName,userRole);
+            instance = new UserSession(user);
         }
+    }
+    public static  void destroyInstance() {
+        instance = null;
     }
 
     public static UserSession getInstance() {
@@ -19,7 +26,14 @@ public class UserSession {
     }
 
     public int getUserId() {
-        return userId;
+        return user.userId;
     }
+    public String getEmail() {
+        return user.email;
+    }
+    public String getPhoneNumber() {
+        return user.phoneNumber;
+    }
+
 }
 

@@ -85,6 +85,7 @@ public class AuthRepo implements IAuth{
                 user.email = rs.getString("Email");
                 user.dateOfBirth = rs.getDate("DateOfBirth").toLocalDate();
                 user.phoneNumber = rs.getString("PhoneNumber");
+                user.setPassword(rs.getString("Password"));
             }
 
             return user;
@@ -96,5 +97,62 @@ public class AuthRepo implements IAuth{
 
         return null;
     }
+    public String changePassword(String email, String oldPassword, String newPassword){
+        try{
+            Connection con = _conn.getConnection();
+
+            if(con == null){
+                throw new Exception("Connection Failed");
+            }
+
+            CallableStatement statement = con.prepareCall("{call dbo.UpdPassword(?,?,?)}");
+            statement.setString(1,email);
+            statement.setString(2,oldPassword);
+            statement.setString(3,newPassword);
+            ResultSet rs = statement.executeQuery();
+
+            String result = "Failure";
+            if(rs.next()){
+                result = rs.getString("Result");
+            }
+            con.close();
+            return result;
+
+        }
+        catch (Exception ex){
+            System.out.println("Connection Failed"+ ex.getMessage());
+        }
+
+        return "Failure";
+    }
+
+    public String changeInformation(int userId,String email,String phoneNumber){
+        try {
+            Connection con = _conn.getConnection();
+
+            if(con == null){
+                throw new Exception("Connection Failed");
+            }
+
+            CallableStatement statement = con.prepareCall("{call dbo.UpdInfo(?,?,?)}");
+            statement.setInt(1,userId);
+            statement.setString(2,email);
+            statement.setString(3,phoneNumber);
+            ResultSet rs = statement.executeQuery();
+
+            String result = "Failure";
+            if(rs.next()){
+                result = rs.getString("Result");
+            }
+            con.close();
+            return result;
+        }
+        catch (Exception ex){
+            System.out.println("Connection Failed"+ ex.getMessage());
+        }
+
+        return "Failure";
+    }
+
 
 }

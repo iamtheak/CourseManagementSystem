@@ -99,4 +99,11 @@ public class AuthController {
         return _auth.getUserInfo(email);
     }
 
+    public String ChangePassword(String email, String oldPassword, String newPassword){
+        return _auth.changePassword(email, oldPassword, newPassword);
+    }
+    public String ChangeInformation(int userId,String email,String phoneNumber){
+        return _auth.changeInformation(userId,email,phoneNumber);
+    }
+
 }

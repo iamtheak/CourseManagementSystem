@@ -5,6 +5,7 @@ import Model.AuthModels.LoginModel;
 import Model.UserModels.UserBaseModel;
 import Views.Admin.DashBoard;
 import Views.Student.StudentDashboard;
+import Views.Teacher.TeacherDashboard;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -54,20 +55,24 @@ public class LoginForm extends JFrame{
 
 
                     UserBaseModel user = auth.getUserInfo(email);
-                    UserSession.createInstance(user.userId,user.firstName,role);
+                    UserSession.createInstance(user);
 
+
+                    System.out.println(role);
                     if(role.equals("Admin")){
                         DashBoard form = new DashBoard();
                         dispose();
                     }
-//                else if(role.equals("Teacher")){
-//                    TeacherDashboard form = new TeacherDashboard();
-//                    dispose();
-//                }
-                else if(role.equals("Student")){
-                    StudentDashboard form = new StudentDashboard();
+                    else if(role.equals("Student")){
+                        StudentDashboard form = new StudentDashboard();
+                        form.setVisible(true);
+                        dispose();
+                    }
+                else if(role.equals("Teacher")){
+                    TeacherDashboard form = new TeacherDashboard();
                     dispose();
                 }
+
                 }
             }
         });

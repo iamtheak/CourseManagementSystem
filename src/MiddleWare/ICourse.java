@@ -26,6 +26,8 @@ public interface ICourse {
     Course getCourseByName(String name);
     String assignTeacher(String moduleName, int teacherId);
     String unassignTeacher(String moduleName, int teacherId);
+    ArrayList<CourseModule> getCourseModulesForEnrollment(int courseId, int year);
+    String publishResult(int courseId,int year);
 
 }
 

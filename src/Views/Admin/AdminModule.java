@@ -4,7 +4,11 @@ import Controller.AdminController;
 import Model.CourseModels.CMSModule;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -17,8 +21,9 @@ public class AdminModule extends JFrame {
     private JTable modulesTable;
     private JPanel sidePanel;
     private JPanel tablePanel;
+    private JTextField searchBar;
     private JButton assignTeacher;
-
+    private TableRowSorter<TableModel> rowSorter;
 
     public void updateTable(){
         AdminController adminController = new AdminController();
@@ -29,12 +34,13 @@ public class AdminModule extends JFrame {
         DefaultTableModel model = new DefaultTableModel(data, columnNames);
 
         modulesTable.setModel(model);
+
+        rowSorter.setModel(modulesTable.getModel());
         modulesTable.revalidate();
         modulesTable.repaint();
 
-
     }
-    public void loadTable(){
+    public void loadTable() {
         AdminController adminController = new AdminController();
 
         String[] columnNames = {"Module Id","Module Name", "Module Code", "Credits", "Pass Percent"};
@@ -42,7 +48,10 @@ public class AdminModule extends JFrame {
 
         DefaultTableModel model = new DefaultTableModel(data, columnNames);
 
+
         modulesTable.setModel(model);
+        rowSorter = new TableRowSorter<>(modulesTable.getModel());
+        modulesTable.setRowSorter(rowSorter);
 
         JScrollPane scrollPane = new JScrollPane(modulesTable);
         tablePanel.add(scrollPane);
@@ -50,6 +59,7 @@ public class AdminModule extends JFrame {
         modulesTable.revalidate();
         modulesTable.repaint();
     }
+
     public AdminModule(){
         add(mainPanel);
         setTitle("Admin Module");
@@ -75,7 +85,7 @@ public class AdminModule extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String id = JOptionPane.showInputDialog(null, "Enter ID:");
-                if (id == null || id.trim().isEmpty()) {
+                if (id == null || id.trim().isEmpty() ||!id.matches("\\d+")) {
                     JOptionPane.showMessageDialog(null, "You must enter an ID.");
                 } else {
                     int moduleId = Integer.parseInt(id);
@@ -113,12 +123,35 @@ public class AdminModule extends JFrame {
                 }
             }
         });
-    }
+       searchBar.getDocument().addDocumentListener(new DocumentListener() {
+           @Override
+           public void insertUpdate(DocumentEvent e) {
+               String text = searchBar.getText();
 
-    public static void main(String[] args) {
-        AdminModule adminModule = new AdminModule();
-        adminModule.setVisible(true);
-    }
+               if (text.trim().length() == 0) {
+                   rowSorter.setRowFilter(null);
+               } else {
+                   rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+               }
+           }
 
+           @Override
+           public void removeUpdate(DocumentEvent e) {
+               String text = searchBar.getText();
+
+               if (text.trim().length() == 0) {
+                   rowSorter.setRowFilter(null);
+               } else {
+                   rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+               }
+           }
+           @Override
+           public void changedUpdate(DocumentEvent e) {
+               throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+           }
+       });
+
+
+    }
 
 }

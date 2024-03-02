@@ -30,7 +30,7 @@ public class CourseRepo implements ICourse{
             statement.setString(2,courseModule.moduleName);
             statement.setInt(3,courseModule.year);
             statement.setInt(4,courseModule.semester);
-            statement.setInt(5,courseModule.ModuleNumber);
+            statement.setInt(5,courseModule.moduleNumber);
             statement.setBoolean(6,courseModule.isOptional);
             statement.setInt(7,courseModule.optionalModuleNumber);
 
@@ -345,7 +345,7 @@ public class CourseRepo implements ICourse{
                 module.moduleCode = rs.getString("ModuleCode");
                 module.year = rs.getInt("Year");
                 module.semester = rs.getInt("Semester");
-                module.ModuleNumber = rs.getInt("ModuleNumber");
+                module.moduleNumber = rs.getInt("ModuleNumber");
                 module.isOptional = rs.getBoolean("IsOptional");
                 module.optionalModuleNumber = rs.getInt("OptionNumber");
                 moduleList.add(module);
@@ -470,7 +470,7 @@ public class CourseRepo implements ICourse{
             statement.setString(2,courseModule.moduleName);
             statement.setInt(3,courseModule.year);
             statement.setInt(4,courseModule.semester);
-            statement.setInt(5,courseModule.ModuleNumber);
+            statement.setInt(5,courseModule.moduleNumber);
             statement.setInt(6,courseModule.optionalModuleNumber);
 
             ResultSet rs =  statement.executeQuery();
@@ -570,5 +570,68 @@ public class CourseRepo implements ICourse{
     }
     public void markCoursework(){
         System.out.println("markCoursework");
+    }
+    public ArrayList<CourseModule> getCourseModulesForEnrollment(int courseId, int year){
+
+        try{
+            Connection con = _conn.getConnection();
+
+            if(con == null){
+                throw new DatabaseError("Connection Failed");
+            }
+
+            CallableStatement statement = con.prepareCall("{call SelCourseModuleForEnrollment(?,?)}");
+            statement.setInt(1,courseId);
+            statement.setInt(2,year);
+
+            ResultSet rs = statement.executeQuery();
+
+            ArrayList<CourseModule> moduleList = new ArrayList<>();
+            while(rs.next()){
+                CourseModule module = new CourseModule();
+                module.moduleId = rs.getInt("ModuleId");
+                module.moduleName = rs.getString("ModuleName");
+                module.moduleCode = rs.getString("ModuleCode");
+                module.year = rs.getInt("Year");
+                module.semester = rs.getInt("Semester");
+                module.moduleNumber = rs.getInt("ModuleNumber");
+                module.isOptional = rs.getBoolean("IsOptional");
+                module.optionalModuleNumber = rs.getInt("OptionNumber");
+                module.moduleNumber = rs.getInt("ModuleNumber");
+                moduleList.add(module);
+            }
+
+            return moduleList;
+        }
+        catch (Exception ex){
+            System.out.println("Connection Failed"+ex);
+        }
+        return null;
+    }
+
+    public String publishResult(int courseId,int year){
+        try {
+            Connection con = _conn.getConnection();
+            if(con == null){
+                throw new DatabaseError("Connection Failed");
+            }
+
+            CallableStatement statement = con.prepareCall("{call InsResult(?,?)}");
+            statement.setInt(1,courseId);
+            statement.setInt(2,year);
+
+            ResultSet rs =  statement.executeQuery();
+
+            String result = "Failure";
+            if(rs.next()){
+                result =  rs.getString("Result");
+            }
+            _conn.closeConnection(con);
+            return result;
+        }
+        catch (Exception ex){
+            System.out.println("Connection Failed"+ex);
+        }
+        return "Failure";
     }
 }

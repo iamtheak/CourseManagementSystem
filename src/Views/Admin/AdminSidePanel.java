@@ -1,6 +1,8 @@
 package Views.Admin;
 
 import Views.LoginForm;
+import Views.Settings;
+import Views.UserSession;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -10,12 +12,10 @@ public class AdminSidePanel extends JFrame{
     private JPanel mainPanel;
     private JButton adminDashboard;
     private JButton adminCourses;
-    private JButton adminStudents;
     private JButton adminTeacher;
     private JButton settings;
     private JPanel AdminSidePanel;
     private JButton modulesButton;
-    private JButton adminLogoutButton;
 
 
     public AdminSidePanel(JFrame parent){
@@ -43,15 +43,6 @@ public class AdminSidePanel extends JFrame{
             }
         });
 
-//        adminStudents.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                AdminStudent adminStudent = new AdminStudent();
-//                adminStudent.setVisible(true);
-//                parent.dispose();
-//            }
-//        });
-//
         adminTeacher.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -69,24 +60,15 @@ public class AdminSidePanel extends JFrame{
                 parent.dispose();
             }
         });
-//
-//        settings.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                AdminSettings adminSettings = new AdminSettings();
-//                adminSettings.setVisible(true);
-//                parent.dispose();
-//            }
-//        });
 
-        adminLogoutButton.addActionListener(new ActionListener() {
+        settings.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-                LoginForm loginForm = new LoginForm();
-                parent.dispose();
+                Settings adminSettings = new Settings(parent);
+                adminSettings.setVisible(true);
             }
         });
+
     }
 
     public JPanel getMainPanel() {
